@@ -13,8 +13,15 @@ void Testing() {
     auto* bst = new Bst<someObject>();
     bst->AddNode(someObject{5,'a'});
     bst->AddNode(someObject{6,'b'});
-    bst->AddNode(someObject{4,'c'});
-    Node<someObject>* node_ptr = bst->FindTreeNode(bst->root, {6,'b'});
+    bst->AddNode(someObject{1,'c'});
+    bst->AddNode(someObject{8,'c'});
+    unsigned int height = bst->GetHeight();
+    //bst->AddNode(someObject{7,'c'});
+    Node<someObject>* node_ptr = bst->FindTreeNode(bst->root, {1,'c'});
+    //bst->DeleteNode(node_ptr);
+    bst->InorderTraversal();
+    bst->PrintList();
+    bst->Clear();
     bst->PrintList();
     delete bst;
 }
