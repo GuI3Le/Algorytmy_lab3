@@ -8,7 +8,7 @@
 template <typename T>
 class Node{
 public:
-    static unsigned int id;
+    // static unsigned int id;
     Node* parent;
     Node* left_child;
     Node* right_child;
@@ -21,16 +21,16 @@ public:
         this->right_child = nullptr;
         //data = T();//?
         //id = 0;
-        node_id = id;
-        id +=1;
+        // node_id = id;
+        // id +=1;
     }
     explicit Node(T inserted_data) {
         this->parent = nullptr;
         this->left_child = nullptr;
         this->right_child = nullptr;
         data = inserted_data;
-        node_id = id;
-        id +=1;
+        // node_id = id;
+        // id +=1;
     }
 
     Node(Node<T>* parent_node ,T inserted_data) {
@@ -38,8 +38,8 @@ public:
         this->left_child = nullptr;
         this->right_child = nullptr;
         data = inserted_data;
-        node_id = id;
-        id +=1;
+        // node_id = id;
+        // id +=1;
     }
 
     ~Node() {

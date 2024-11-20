@@ -13,7 +13,7 @@ bool StandardOrder(T compared_obj, T inserted_obj) {
         return true;
     }else if(diff==0) {
         diff = compared_obj.value2 - inserted_obj.value2;
-        if(diff<0) {
+        if(diff<=0) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ public:
         root = nullptr;
         size = 0;
     }
-public:
+// public:
     // void CompareNode(T compared_obj, T inserted_obj, )
 // (a) dodanie nowe elementu do drzewa
     void AddNode(T inserted_data) {
@@ -59,6 +59,8 @@ public:
                     auto* new_node=new Node<T>(current_node_parent,inserted_data);
                     current_node_parent->left_child=new_node;
                 }
+            }else {
+                return;
             }
         }else {
             root = new Node<T>(inserted_data);
@@ -224,7 +226,20 @@ public:
 
 // (f) czyszczenie drzewa
     void DeleteRecursive(Node<T>* node) {
-            if(node->left_child) {
+        if(node!=nullptr) {
+            return;
+        }
+        DeleteRecursive(node->left_child);
+        DeleteRecursive(node->right_child);
+        if(node->parent) {
+            if(node->parent->left_child==node) {
+                node->parent->left_child = nullptr;
+            }else if(node->parent->right_child == node) {
+                node->parent->right_child = nullptr;
+            }
+        }
+        delete node;
+            /*if(node->left_child) {
                 DeleteRecursive(node->left_child);
             }
             if(node->right_child) {
@@ -237,10 +252,13 @@ public:
                     node->parent->right_child = nullptr;
                 }
             }else {
+                size--;
+                delete node;
                 root = nullptr;
+                return;
             }
             size--;
-            delete node;
+            delete node;*/
     }
 
     void Clear() {

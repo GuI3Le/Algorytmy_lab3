@@ -15,8 +15,8 @@ struct someObject {
     char value2;
 };
 
-template <typename T>
-unsigned int Node<T>::id = 0;
+//template <typename T>
+// unsigned int Node<T>::id = 0;
 
 void Testing() {
     auto* bst = new Bst<someObject>();
@@ -68,7 +68,7 @@ void Benchmark() {
 }
 
 int main() {
-    Testing();
+    //Testing();
     Benchmark();
     return 0;
 }
