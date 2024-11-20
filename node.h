@@ -19,7 +19,7 @@ public:
         this->parent = nullptr;
         this->left_child = nullptr;
         this->right_child = nullptr;
-        data = T();//?
+        //data = T();//?
         //id = 0;
         node_id = id;
         id +=1;

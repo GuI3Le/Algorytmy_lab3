@@ -51,12 +51,14 @@ public:
                     current_node = current_node->left_child;
                 }
             }
-            if(StandardOrder(current_node_parent->data,inserted_data)) {
-                auto* new_node=new Node<T>(current_node_parent,inserted_data);
-                current_node_parent->right_child=new_node;
-            }else {
-                auto* new_node=new Node<T>(current_node_parent,inserted_data);
-                current_node_parent->left_child=new_node;
+            if(current_node_parent->data.value1 != inserted_data.value1 && current_node_parent->data.value2 != inserted_data.value2) {
+                if(StandardOrder(current_node_parent->data,inserted_data)) {
+                    auto* new_node=new Node<T>(current_node_parent,inserted_data);
+                    current_node_parent->right_child=new_node;
+                }else {
+                    auto* new_node=new Node<T>(current_node_parent,inserted_data);
+                    current_node_parent->left_child=new_node;
+                }
             }
         }else {
             root = new Node<T>(inserted_data);
@@ -105,7 +107,7 @@ public:
         //return nullptr;
 
     }
-    void MoveNodes(Node<T>* node_to_move,Node<T>* prev_l_child) {
+    /*void MoveNodes(Node<T>* node_to_move,Node<T>* prev_l_child) {
         Node<T>* replacement_node = node_to_move->right_child;
         replacement_node=node_to_move->right_child;
         node_to_move->parent->right_child = replacement_node;
@@ -119,9 +121,20 @@ public:
             MoveNodes(replacement_node,replacement_node_prev_l_child);
         }
 
+    }*/
+
+    Node<T>* MaxNode(Node<T>* node) {
+        if(node->right_child) {
+            return  MaxNode(node->left_child);
+        }
+        if(node->left_child) {
+            return MaxNode(node->right_child);
+        }
+            return node;
     }
+
 // (c) usuwanie znalezionego wcześniej węzła drzewa
-    void DeleteNode(Node<T>* node_to_delete) {
+    /*void DeleteNode(Node<T>* node_to_delete) {
         if(node_to_delete) {
             if(node_to_delete->right_child) {
                 Node<T>* replacement_node_prev_l_child = node_to_delete->right_child->left_child;
@@ -139,6 +152,37 @@ public:
                 }
                 delete node_to_delete;
             }
+            size--;
+        }
+    }*/
+
+    void DeleteNode(Node<T>* node_to_delete) {
+        if(node_to_delete) {
+            Node<T>* replacement_node = nullptr;
+            if(node_to_delete->left_child) {
+                replacement_node = MaxNode(node_to_delete->left_child);
+            }else if(node_to_delete->right_child){
+                replacement_node = MaxNode(node_to_delete->right_child);
+            }
+            if(replacement_node) {
+                // Node<T>* tmp_node = node_to_delete;
+                if(replacement_node->parent->left_child==replacement_node) {
+                    replacement_node->parent->left_child = nullptr;
+                    replacement_node->left_child = node_to_delete->left_child;
+                    replacement_node->right_child = node_to_delete->right_child;
+                }else {
+                    replacement_node->parent->right_child = nullptr;
+                    replacement_node->left_child = node_to_delete->left_child;
+                    replacement_node->right_child = node_to_delete->right_child;
+                }
+
+            }
+            if(node_to_delete->parent->left_child==node_to_delete) {
+                node_to_delete->parent->left_child = replacement_node;
+            }else if(node_to_delete->parent->right_child==node_to_delete) {
+                node_to_delete->parent->right_child = replacement_node;
+            }
+            delete node_to_delete;
             size--;
         }
     }
@@ -179,12 +223,12 @@ public:
     }
 
 // (f) czyszczenie drzewa
-    void DeleteRecursiv(Node<T>* node) {
+    void DeleteRecursive(Node<T>* node) {
             if(node->left_child) {
-                DeleteRecursiv(node->left_child);
+                DeleteRecursive(node->left_child);
             }
             if(node->right_child) {
-                DeleteRecursiv(node->right_child);
+                DeleteRecursive(node->right_child);
             }
             if(node->parent) {
                 if(node->parent->left_child== node) {
@@ -201,7 +245,7 @@ public:
 
     void Clear() {
         if(root) {
-            DeleteRecursiv(root);
+            DeleteRecursive(root);
         }else {
             std::cout<<"Lista pusta"<<std::endl;
         }
@@ -209,62 +253,40 @@ public:
 
 
 // (g) wyznaczenie wysokości drzewa
-    int ReturnHeight(Node<T>* node,unsigned int max_height=0,unsigned int counter=0) {
-        if(node->left_child) {
-            counter++;
-            ReturnHeight(node->left_child, max_height,counter);
-
-            /*}else if(counter>max_height){
-                max_height = counter;
-                counter =0;
-            }*/
-            if(node->right_child) {
-                counter++;
-                ReturnHeight(node->right_child,max_height,counter);
-            }
-            /*}else if(counter>max_height){
-                max_height = counter;
-                counter =0;
-            }*/
-            if(!(node->right_child||node->right_child)) {
-                if(counter>max_height){
-                    max_height = counter;
-                    counter -= 1;
-                }
-            }
-
-            if(node->parent == nullptr) {
-                return max_height;
-            }
+    int GetHeight(Node<T>* node) {
+        if(node==nullptr) return 0;
+        int l_height = GetHeight(node->left_child);
+        int r_height = GetHeight(node->right_child);
+        if(l_height>r_height) {
+            return  l_height +1;
+        }else {
+            return r_height+1;
         }
-    }
-
-    int GetHeight() {
-        unsigned int max_height = ReturnHeight(root);
-        return max_height;
 
     }
 
 // (h) zwrócenie napisowej reprezentacji drzewa
 private:
-    void PrintNode(Node<T>* node){
+    void PrintNode(Node<T>* node,unsigned int counter=0,bool flag = false){
         std::cout<<"\t "<<node<<": (p:"<<node->parent<<", l: "<<node->left_child<<", r: "<<node->right_child<<", data: {"<<node->data.value1<<", "<<node->data.value2<<"}),"<<std::endl;
+        if(flag && counter>=4) {
+            return;
+        }
         if(node->left_child) {
-            PrintNode(node->left_child);
+            PrintNode(node->left_child,counter+1,true);
         }
         if(node->right_child) {
-            PrintNode(node->right_child);
+            PrintNode(node->right_child,counter+1,true);
         }
-        //std::cout<<node->data.value1<<" "<<node->data.value2<<" ";
     }
 public:
-    void PrintList() {
+    void PrintList(unsigned int counter=0,bool flag = false) {
         if(root) {
             std::cout<<"Binary search tree: "<<std::endl;
             std::cout<<"Size: "<<this->size<<std::endl;
-            std::cout<<"Height: "<<std::endl;
+            std::cout<<"Height: "<<this->GetHeight(this->root)<<std::endl;
             std::cout<<"{"<<std::endl;
-            PrintNode(root);
+            PrintNode(root,counter,flag);
             std::cout<<"}"<<std::endl;
         }else {
             std::cout<<"Lista pusta"<<std::endl;
