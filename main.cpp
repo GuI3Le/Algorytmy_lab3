@@ -41,20 +41,20 @@ void Benchmark() {
     constexpr int MAX_ORDER = 7;
     auto* bst = new Bst<someObject>();
     for (int o=1;o<=MAX_ORDER;o++) {
-        const int N = static_cast<int>(pow(10,o));
+        int N = static_cast<int>(pow(10,o));
         clock_t t1 = clock();
         for (int i=0;i<N;i++) {
             bst->AddNode(someObject{static_cast<int>(gen()),static_cast<char>(char_distribution(gen))});
         }
         clock_t t2 = clock();
-        const double addTime = (t2 - t1) / static_cast<double>(CLOCKS_PER_SEC);
-        cout << "Czas dodawania " << N << " elementów do listy: " << addTime << endl;
+        double addTime = (t2 - t1) / static_cast<double>(CLOCKS_PER_SEC);
+        cout << "Czas dodawania " << N << " elementow do listy: " << addTime << endl;
 
-        const int M = static_cast<int>(pow(10,4));
+        int M = static_cast<int>(pow(10,4));
         unsigned int hits = 0;
         t1 = clock();
         for (int i=0;i<M;i++) {
-            const auto* result = bst->FindTreeNode(bst->root,someObject{static_cast<int>(gen()),static_cast<char>(char_distribution(gen))});
+            auto* result = bst->FindTreeNode(bst->root,someObject{static_cast<int>(gen()),static_cast<char>(char_distribution(gen))});
             if(result !=nullptr) hits++;
             delete result;
         }

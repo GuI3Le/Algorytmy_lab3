@@ -13,7 +13,7 @@ bool StandardOrder(T compared_obj, T inserted_obj) {
         return true;
     }else if(diff==0) {
         diff = compared_obj.value2 - inserted_obj.value2;
-        if(diff<=0) {
+        if(diff<0) {
             return true;
         }
     }
@@ -43,7 +43,7 @@ public:
         if(root!=nullptr) {
             Node<T>* current_node = this->root;
             Node<T>* current_node_parent = nullptr;
-            while(current_node) {
+            while(current_node !=nullptr) {
                 current_node_parent = current_node;
                 if(StandardOrder(current_node->data,inserted_data)) {
                     current_node = current_node->right_child;
@@ -226,7 +226,7 @@ public:
 
 // (f) czyszczenie drzewa
     void DeleteRecursive(Node<T>* node) {
-        if(node!=nullptr) {
+        if(node==nullptr) {
             return;
         }
         DeleteRecursive(node->left_child);
@@ -239,7 +239,9 @@ public:
             }
         }
         delete node;
-            /*if(node->left_child) {
+        this->root=nullptr;
+        size--;
+        /*if(node->left_child) {
                 DeleteRecursive(node->left_child);
             }
             if(node->right_child) {
@@ -277,9 +279,8 @@ public:
         int r_height = GetHeight(node->right_child);
         if(l_height>r_height) {
             return  l_height +1;
-        }else {
-            return r_height+1;
         }
+            return r_height+1;
 
     }
 
